@@ -45,21 +45,21 @@ namespace Compare2FilesForms
                 return;
             }
 
-            string[] linesA = File.ReadAllLines(label1.Text);
-            string[] linesB = File.ReadAllLines(label2.Text);
+            IList<string> linesA = File.ReadAllLines(label1.Text).Select(x => x.ToUpper()).ToList();
+            IList<string> linesB = File.ReadAllLines(label2.Text).Select(x => x.ToUpper()).ToList();
 
+            var ignorarColunas = new List<Tuple<int, int>>
+            {
+                // Data da ocorrência do sinistro.
+                new Tuple<int, int>(477, 10), 
+                // nosso numero
+                new Tuple<int, int>(804, 15)
+            };
 
-            var ignorarColunas = new List<Tuple<int, int>>();
-
-            //ignorarColunas.Add(new Tuple<int, int>(71, 10));
-            ignorarColunas.Add(new Tuple<int, int>(477, 10)); // Data da ocorrência do sinistro.
-            ignorarColunas.Add(new Tuple<int, int>(804, 15)); // nosso numero
-
-            palavraIgnorada = string.Empty;
             foreach (var item in ignorarColunas.OrderBy(x => x.Item1))
             {
                 palavraIgnorada = letra;
-                for (int i = 1; i < (item.Item2); i++)
+                for (var i = 1; i < (item.Item2); i++)
                 {
                     palavraIgnorada += letra;
                 }
@@ -68,7 +68,6 @@ namespace Compare2FilesForms
                 linesB = linesB.Select(x => x.Remove(item.Item1, item.Item2).Insert(item.Item1, palavraIgnorada)).ToArray();
             }
             
-
             IList<string> onlyA = linesA.Except(linesB).ToList();
             IList<string> onlyB = linesB.Except(linesA).ToList();
 
@@ -80,15 +79,18 @@ namespace Compare2FilesForms
                 return;
             }
 
+            var comparadorLinhas = new ComparadorLinhas(onlyA, onlyB);
+            IList<string> analiseDiferenca = comparadorLinhas.Analisar();
+
             DialogResult result = MessageBox.Show(string.Format("Foi encontrado diferenças nos arquivos.\n\nTotal de diferenças: {0} linhas.\n\nDeseja salvar as diferenças ?", onlyA.Distinct().Count()), 
                 "Confirmação", 
                 MessageBoxButtons.YesNo, 
                 MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {            
-                SaveFileDialog savefile = new SaveFileDialog();
+                var savefile = new SaveFileDialog();
                 // set a default file name
-                savefile.FileName = string.Format("Comparacao{0}.txt", DateTime.Now.ToString("yyyyMMdd"));
+                savefile.FileName = string.Format("Comparacao{0:yyyyMMdd}.txt", DateTime.Now);
                 // set filters - this can be done in properties as well
                 savefile.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
 
@@ -97,9 +99,9 @@ namespace Compare2FilesForms
                     var directory = Path.GetDirectoryName(savefile.FileName);
                     var asad = Path.GetFileNameWithoutExtension(savefile.FileName);
 
-                    //File.WriteAllLines(Path.Combine(directory, string.Format("Comparacao{0}.txt", DateTime.Now.ToString("yyyyMMdd"))), total);
-                    File.WriteAllLines(Path.Combine(directory, string.Format("Comparacao{0}_1.txt", DateTime.Now.ToString("yyyyMMdd"))), onlyA);
-                    File.WriteAllLines(Path.Combine(directory, string.Format("Comparacao{0}_2.txt", DateTime.Now.ToString("yyyyMMdd"))), onlyB);
+                    File.WriteAllLines(Path.Combine(directory, string.Format("Comparacao{0:yyyyMMdd}_Arquivo_Antigo.txt", DateTime.Now)), onlyA);
+                    File.WriteAllLines(Path.Combine(directory, string.Format("Comparacao{0:yyyyMMdd}_Arquivo_Novo.txt", DateTime.Now)), onlyB);
+                    File.WriteAllLines(Path.Combine(directory, string.Format("Comparacao{0:yyyyMMdd}_DIFF.txt", DateTime.Now)), analiseDiferenca);
                     MessageBox.Show("Salvo com sucesso!", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
