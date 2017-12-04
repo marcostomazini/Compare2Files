@@ -22,7 +22,6 @@ namespace Compare2FilesForms
             {
                 new Tuple<string, int, int>("Data cancelamento apólice", 71, 10),
                 new Tuple<string, int, int>("Valor IOF", 308, 13),
-                new Tuple<string, int, int>("Nome segurado", 81, 50),
                 new Tuple<string, int, int>("Nome conta financeira", 570, 50),
                 new Tuple<string, int, int>("Data vencimento", 342, 10),
                 new Tuple<string, int, int>("Sucursal", 3, 5),

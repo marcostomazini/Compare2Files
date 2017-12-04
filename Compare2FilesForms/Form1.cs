@@ -48,26 +48,9 @@ namespace Compare2FilesForms
             IList<string> linesA = File.ReadAllLines(label1.Text).Select(x => x.ToUpper()).ToList();
             IList<string> linesB = File.ReadAllLines(label2.Text).Select(x => x.ToUpper()).ToList();
 
-            var ignorarColunas = new List<Tuple<int, int>>
-            {
-                // Data da ocorrência do sinistro.
-                new Tuple<int, int>(477, 10), 
-                // nosso numero
-                new Tuple<int, int>(804, 15)
-            };
+            linesA = ColunaIgnorada.IgnorarColunas(linesA);
+            linesB = ColunaIgnorada.IgnorarColunas(linesB);
 
-            foreach (var item in ignorarColunas.OrderBy(x => x.Item1))
-            {
-                palavraIgnorada = letra;
-                for (var i = 1; i < (item.Item2); i++)
-                {
-                    palavraIgnorada += letra;
-                }
-
-                linesA = linesA.Select(x => x.Remove(item.Item1, item.Item2).Insert(item.Item1, palavraIgnorada)).ToArray();
-                linesB = linesB.Select(x => x.Remove(item.Item1, item.Item2).Insert(item.Item1, palavraIgnorada)).ToArray();
-            }
-            
             IList<string> onlyA = linesA.Except(linesB).ToList();
             IList<string> onlyB = linesB.Except(linesA).ToList();
 
