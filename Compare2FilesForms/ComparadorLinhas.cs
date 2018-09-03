@@ -11,8 +11,8 @@ namespace Compare2FilesForms
 
         public ComparadorLinhas(IEnumerable<string> linhasAntigas, IEnumerable<string> linhasNovas)
         {
-            _linhasAntigas = linhasAntigas.Skip(1).Select(x => new LinhaContabilidade(x)).ToList();
-            _linhasNovas = linhasNovas.Skip(1).Select(x => new LinhaContabilidade(x)).ToList(); 
+            _linhasAntigas = linhasAntigas.OrderBy(x => x).Select(x => new LinhaContabilidade(x)).ToList();
+            _linhasNovas = linhasNovas.OrderBy(x => x).Select(x => new LinhaContabilidade(x)).ToList(); 
         }
 
         public IList<string> Analisar()
@@ -23,6 +23,7 @@ namespace Compare2FilesForms
                 new Tuple<string, int, int>("Data cancelamento apólice", 71, 10),
                 new Tuple<string, int, int>("Valor IOF", 308, 13),
                 new Tuple<string, int, int>("Nome conta financeira", 570, 50),
+                new Tuple<string, int, int>("Nome segurado", 81, 50),
                 new Tuple<string, int, int>("Data vencimento", 342, 10),
                 new Tuple<string, int, int>("Sucursal", 3, 5),
                 new Tuple<string, int, int>("Sucursal Sinistro", 514, 5),
@@ -36,9 +37,8 @@ namespace Compare2FilesForms
 
             foreach (var linhaNova in _linhasNovas)
             {
-                retorno.Add(string.Format("Fatura      : {0}", linhaNova.GetNumeroFatura()));
-                retorno.Add(string.Format("Valor prêmio: {0}", linhaNova.GetValorPremio()));
-                retorno.Add(string.Format("{0}", linhaNova.GetLinha()));
+                retorno.Add(string.Format("Fatura: {0} - Sinistro: {1} - Vlr Sinistro: {2}, Vlr Prêmio: {3}", linhaNova.Fatura, linhaNova.Sinistro, linhaNova.ValorSinistro, linhaNova.ValorPremio));
+                retorno.Add(string.Format("{0}", linhaNova.Linha));
                 
                 var linhasAntigasSemelhantes = _linhasAntigas.Where(x => Equals(x, linhaNova)).ToList();
 
@@ -50,7 +50,7 @@ namespace Compare2FilesForms
 
                 foreach (var linhaAntigaSemelhante in linhasAntigasSemelhantes)
                 {
-                    retorno.Add(string.Format("{0}", linhaAntigaSemelhante.GetLinha()));
+                    retorno.Add(string.Format("{0}", linhaAntigaSemelhante.Linha));
 
                     var inicioDiferenca = 0;
 
@@ -59,8 +59,8 @@ namespace Compare2FilesForms
 
                     foreach (var colunaConhecida in colunasConhecidas)
                     {
-                        textoNovo = linhaNova.GetLinha().Substring(colunaConhecida.Item2, colunaConhecida.Item3);
-                        textoAntigo = linhaAntigaSemelhante.GetLinha().Substring(colunaConhecida.Item2, colunaConhecida.Item3);
+                        textoNovo = linhaNova.Linha.Substring(colunaConhecida.Item2, colunaConhecida.Item3);
+                        textoAntigo = linhaAntigaSemelhante.Linha.Substring(colunaConhecida.Item2, colunaConhecida.Item3);
 
                         if (textoNovo == textoAntigo) 
                             continue;
@@ -73,23 +73,23 @@ namespace Compare2FilesForms
                     textoNovo = string.Empty;
                     textoAntigo = string.Empty;
 
-                    for (var i = 0; i < linhaNova.GetLinha().Length; i++)
+                    for (var i = 0; i < linhaNova.Linha.Length; i++)
                     {
                         var colunaConhecida =
-                            colunasConhecidas.FirstOrDefault(x => i >= x.Item2 && i <= x.Item2 + x.Item3);
+                            colunasConhecidas.FirstOrDefault(x => i >= x.Item2 && i < x.Item2 + x.Item3);
 
                         if (colunaConhecida != null)
                             continue;
 
-                        if (linhaNova.GetLinha()[i] != linhaAntigaSemelhante.GetLinha()[i])
+                        if (linhaNova.Linha[i] != linhaAntigaSemelhante.Linha[i])
                         {
                             if (inicioDiferenca == 0)
                                 inicioDiferenca = i + 1;
 
-                            textoNovo = textoNovo + linhaNova.GetLinha()[i];
-                            textoAntigo = textoAntigo + linhaAntigaSemelhante.GetLinha()[i];
+                            textoNovo = textoNovo + linhaNova.Linha[i];
+                            textoAntigo = textoAntigo + linhaAntigaSemelhante.Linha[i];
                         }
-                        else if (linhaNova.GetLinha()[i] == linhaAntigaSemelhante.GetLinha()[i])
+                        else if (linhaNova.Linha[i] == linhaAntigaSemelhante.Linha[i])
                         {
                             if (inicioDiferenca <= 0)
                                 continue;

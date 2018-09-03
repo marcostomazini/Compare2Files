@@ -32,8 +32,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.oldFile = new System.Windows.Forms.Label();
+            this.newFile = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
@@ -64,21 +64,21 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 33);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Arquivo anterior";
+            this.oldFile.AutoSize = true;
+            this.oldFile.Location = new System.Drawing.Point(12, 33);
+            this.oldFile.Name = "label1";
+            this.oldFile.Size = new System.Drawing.Size(81, 13);
+            this.oldFile.TabIndex = 2;
+            this.oldFile.Text = "Arquivo anterior";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 85);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Arquivo novo";
+            this.newFile.AutoSize = true;
+            this.newFile.Location = new System.Drawing.Point(12, 85);
+            this.newFile.Name = "label2";
+            this.newFile.Size = new System.Drawing.Size(70, 13);
+            this.newFile.TabIndex = 3;
+            this.newFile.Text = "Arquivo novo";
             // 
             // button3
             // 
@@ -96,8 +96,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(515, 148);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.newFile);
+            this.Controls.Add(this.oldFile);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.MaximizeBox = false;
@@ -114,8 +114,8 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label oldFile;
+        private System.Windows.Forms.Label newFile;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ToolTip toolTip1;
     }

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Compare2FilesForms
@@ -20,36 +16,33 @@ namespace Compare2FilesForms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                label1.Text = (openFileDialog1.FileName);
+                oldFile.Text = (openFileDialog1.FileName);
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                label2.Text = (openFileDialog1.FileName);
+                newFile.Text = (openFileDialog1.FileName);
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             var palavraIgnorada = string.Empty;
-            var letra = "X";
 
-            if (label1.Text == "Arquivo 1" || label2.Text == "Arquivo 2")
+            if (oldFile.Text == "Arquivo 1" || newFile.Text == "Arquivo 2")
             {
                 MessageBox.Show("Selecione os arquivos!!!", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            IList<string> linesA = File.ReadAllLines(label1.Text).Select(x => x.ToUpper()).ToList();
-            IList<string> linesB = File.ReadAllLines(label2.Text).Select(x => x.ToUpper()).ToList();
 
-            linesA = ColunaIgnorada.IgnorarColunas(linesA);
-            linesB = ColunaIgnorada.IgnorarColunas(linesB);
+            IList<string> linesA = File.ReadAllLines(oldFile.Text).Select(x => x.PrepareToCompare()).ToList();
+            IList<string> linesB = File.ReadAllLines(newFile.Text).Select(x => x.PrepareToCompare()).ToList();
 
             IList<string> onlyA = linesA.Except(linesB).ToList();
             IList<string> onlyB = linesB.Except(linesA).ToList();
