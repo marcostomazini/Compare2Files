@@ -9,10 +9,10 @@ namespace Compare2FilesForms
         private readonly List<LinhaContabilidade> _linhasAntigas;
         private readonly List<LinhaContabilidade> _linhasNovas;
 
-        public ComparadorLinhas(IEnumerable<string> linhasAntigas, IEnumerable<string> linhasNovas)
+        public ComparadorLinhas(IEnumerable<LinhaContabilidade> linhasAntigas, IEnumerable<LinhaContabilidade> linhasNovas)
         {
-            _linhasAntigas = linhasAntigas.OrderBy(x => x).Select(x => new LinhaContabilidade(x)).ToList();
-            _linhasNovas = linhasNovas.OrderBy(x => x).Select(x => new LinhaContabilidade(x)).ToList(); 
+            _linhasAntigas = linhasAntigas.ToList();
+            _linhasNovas = linhasNovas.ToList(); 
         }
 
         public IList<string> Analisar()
@@ -37,7 +37,7 @@ namespace Compare2FilesForms
 
             foreach (var linhaNova in _linhasNovas)
             {
-                retorno.Add(string.Format("Fatura: {0} - Sinistro: {1} - Vlr Sinistro: {2}, Vlr Prêmio: {3}", linhaNova.Fatura, linhaNova.Sinistro, linhaNova.ValorSinistro, linhaNova.ValorPremio));
+                retorno.Add(string.Format("Fatura: {0}, Sinistro: {1}, Dt. Sinistro: {2}, Vlr Sinistro: {3}, Vlr Prêmio: {4}", linhaNova.Fatura, linhaNova.Sinistro, linhaNova.DataSinistro, linhaNova.ValorSinistro, linhaNova.ValorPremio));
                 retorno.Add(string.Format("{0}", linhaNova.Linha));
                 
                 var linhasAntigasSemelhantes = _linhasAntigas.Where(x => Equals(x, linhaNova)).ToList();
