@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Compare2FilesForms
 {
     public static class Extensions
     {
-
         public static string PrepareToCompare(this string linha)
         {
-            const int UltimoCaracterNomeSegurado = 130;
+            const int ultimoCaracterNomeSegurado = 130;
             const int ultimoCaracterNomeFavorecido = 619;
 
-            var sb = new StringBuilder(linha);
-            sb[UltimoCaracterNomeSegurado] = ' ';
-            sb[ultimoCaracterNomeFavorecido] = ' ';
+            var sb = new StringBuilder(linha)
+            {
+                [ultimoCaracterNomeSegurado] = ' ', [ultimoCaracterNomeFavorecido] = ' '
+            };
 
             return sb.ToString().ToUpper();
         }

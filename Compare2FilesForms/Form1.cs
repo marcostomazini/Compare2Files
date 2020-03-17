@@ -52,7 +52,7 @@ namespace Compare2FilesForms
                 return;
             }
 
-            var comparadorLinhas = new ComparadorLinhas(onlyA, onlyB);
+            var comparadorLinhas = new ComparadorLinhasComLayout(onlyA, onlyB);
             var analiseDiferenca = comparadorLinhas.Analisar();
 
             var result = MessageBox.Show(string.Format("Foi encontrado diferenças nos arquivos.\n\nTotal de diferenças: {0} linhas.\n\nDeseja salvar as diferenças ?", onlyA.Distinct().Count()), 

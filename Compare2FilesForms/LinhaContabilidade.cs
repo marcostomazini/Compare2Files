@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Compare2FilesForms
 {
     internal class LinhaContabilidade
@@ -7,16 +9,41 @@ namespace Compare2FilesForms
             Linha = linha;
         }
 
-        public string Endosso { get { return Linha.Substring(33, 10); } }
-        public string Fatura { get { return Linha.Substring(48, 10); } }
-        public string ValorPremio { get { return Linha.Substring(228, 13); } }
-        public string Documento { get { return Linha.Substring(352, 7); } }
-        public string Sinistro { get { return Linha.Substring(467, 10); } }
-        public string DataSinistro { get { return Linha.Substring(477, 10); } }
-        public string ValorSinistro { get { return Linha.Substring(519, 12); } }
-        public string TipoMovimentacao { get { return Linha.Substring(802, 2); } }
-        public string Linha { get; private set; }
+        public string Endosso => Linha.Substring(33, 10);
+        public string Fatura => Linha.Substring(48, 10);
+        public string ValorPremio => Linha.Substring(228, 13);
+        public string Documento => Linha.Substring(352, 7);
+        public string Sinistro => Linha.Substring(467, 10);
+        public string DataSinistro => Linha.Substring(477, 10);
+        public string ValorSinistro => Linha.Substring(519, 12);
+        public string TipoMovimentacao => Linha.Substring(802, 2);
 
+        public IList<Valor> ExtrairValores()
+        {
+            var listaValores = new List<Valor>();
+
+            var inicial = 0;
+            foreach (var coluna in Coluna.ListaColunasLinha)
+            {
+                if (inicial + coluna.Tamanho > Linha.Length)
+                    break;
+
+                var valor = new Valor
+                {
+                    Coluna = coluna,
+                    Inicial = inicial,
+                    Texto = Linha.Substring(inicial, coluna.Tamanho)
+                };
+
+                listaValores.Add(valor);
+
+                inicial += coluna.Tamanho;
+            }
+
+            return listaValores;
+        }
+       
+        public string Linha { get; }
 
         public override bool Equals(object obj)
         {
