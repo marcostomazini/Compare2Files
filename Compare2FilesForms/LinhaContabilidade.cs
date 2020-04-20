@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Compare2FilesForms
 {
-    internal class LinhaContabilidade
+    public class LinhaContabilidade
     {
         public LinhaContabilidade(string linha)
         {

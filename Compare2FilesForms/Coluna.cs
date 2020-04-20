@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Compare2FilesForms
 {
-    internal class Coluna
+    public class Coluna
     {
         public string Nome { get; }
         public int Tamanho { get; }

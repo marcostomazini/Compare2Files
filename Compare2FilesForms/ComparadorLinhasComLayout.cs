@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Compare2FilesForms
 {
-    internal class ComparadorLinhasComLayout
+    public class ComparadorLinhasComLayout
     {
         private readonly List<LinhaContabilidade> linhasAntigas;
         private readonly List<LinhaContabilidade> linhasNovas;
@@ -141,17 +141,17 @@ namespace Compare2FilesForms
         private static IEnumerable<Tuple<string, int, int>> ColunasConhecidasComAlteracaoCadastral =>
             new List<Tuple<string, int, int>>
             {
-                new Tuple<string, int, int>("Data cancelamento apólice", 71, 10),
-                new Tuple<string, int, int>("Valor IOF", 308, 13),
-                new Tuple<string, int, int>("Nome conta financeira", 570, 50),
-                new Tuple<string, int, int>("Nome segurado", 81, 50),
-                new Tuple<string, int, int>("Data vencimento", 342, 10),
-                new Tuple<string, int, int>("Sucursal", 3, 5),
-                new Tuple<string, int, int>("Sucursal Sinistro", 514, 5),
-                new Tuple<string, int, int>("Susep", 549, 6),
-                new Tuple<string, int, int>("Data aviso sinistro (Data contábil fatura)", 487, 10),
-                new Tuple<string, int, int>("Data movimento sinistro (Data contábil fatura)", 497, 10),
-                new Tuple<string, int, int>("Data emissão ordem pagamento (Data contábil fatura)", 620, 10)
+                //new Tuple<string, int, int>("Data cancelamento apólice", 71, 10),
+                //new Tuple<string, int, int>("Valor IOF", 308, 13),
+                //new Tuple<string, int, int>("Nome conta financeira", 570, 50),
+                //new Tuple<string, int, int>("Nome segurado", 81, 50),
+                //new Tuple<string, int, int>("Data vencimento", 342, 10),
+                //new Tuple<string, int, int>("Sucursal", 3, 5),
+                //new Tuple<string, int, int>("Sucursal Sinistro", 514, 5),
+                //new Tuple<string, int, int>("Susep", 549, 6),
+                //new Tuple<string, int, int>("Data aviso sinistro (Data contábil fatura)", 487, 10),
+                //new Tuple<string, int, int>("Data movimento sinistro (Data contábil fatura)", 497, 10),
+                //new Tuple<string, int, int>("Data emissão ordem pagamento (Data contábil fatura)", 620, 10)
             };
     }
 }
