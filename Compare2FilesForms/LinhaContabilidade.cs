@@ -17,6 +17,8 @@ namespace Compare2FilesForms
         public string DataSinistro => Linha.Substring(477, 10);
         public string ValorSinistro => Linha.Substring(519, 12);
         public string TipoMovimentacao => Linha.Substring(802, 2);
+        public string ParTip => Linha.Substring(60, 1);
+        public string CodigoExterno => Linha.Substring(352, 7);
 
         public IList<Valor> ExtrairValores()
         {
@@ -62,7 +64,9 @@ namespace Compare2FilesForms
                 && string.Equals(Documento, other.Documento)
                 && string.Equals(Sinistro, other.Sinistro)
                 && string.Equals(ValorSinistro, other.ValorSinistro)
-                && string.Equals(DataSinistro, other.DataSinistro);
+                && string.Equals(DataSinistro, other.DataSinistro)
+                && string.Equals(ParTip, other.ParTip)
+                && string.Equals(CodigoExterno, other.CodigoExterno);
         }
 
         public override int GetHashCode()
@@ -77,6 +81,8 @@ namespace Compare2FilesForms
                 hashCode = (hashCode * 397) ^ (ValorSinistro != null ? ValorSinistro.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (DataSinistro != null ? DataSinistro.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Sinistro != null ? Sinistro.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (ParTip != null ? ParTip.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (CodigoExterno != null ? CodigoExterno.GetHashCode() : 0);
                 return hashCode;
             }
         }
