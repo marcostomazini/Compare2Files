@@ -4,11 +4,19 @@ namespace Compare2FilesForms
 {
     public class Coluna
     {
+        public double ValorDiferencaMinima { get; }
         public string Nome { get; }
         public int Tamanho { get; }
 
         public Coluna(string nome, int tamanho)
         {
+            Nome = nome;
+            Tamanho = tamanho;
+        }
+
+        public Coluna(string nome, int tamanho, double valorDiferencaMinima)
+        {
+            ValorDiferencaMinima = valorDiferencaMinima;
             Nome = nome;
             Tamanho = tamanho;
         }
@@ -61,7 +69,7 @@ namespace Compare2FilesForms
             new Coluna("DataLancamento", 10),
             new Coluna("CodigoDif", 7),
             new Coluna("FilCodigoExterno", 5),
-            new Coluna("ValorGlosado(+ regra)", 15),
+            new Coluna("ValorGlosado(+ regra)", 15, 0.02d),
             new Coluna("ZEROS_5", 15),
             new Coluna("Hierarquia", 6),
             new Coluna("AnoDataVencimento", 4),

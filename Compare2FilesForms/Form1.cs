@@ -53,7 +53,8 @@ namespace Compare2FilesForms
             }
 
             var comparadorLinhas = new ComparadorLinhasComLayout(onlyA, onlyB);
-            var analiseDiferenca = comparadorLinhas.Analisar();
+
+            var analiseDiferenca = comparadorLinhas.Analisar(out _);
 
             var result = MessageBox.Show(string.Format("Foi encontrado diferenças nos arquivos.\n\nTotal de diferenças: {0} linhas.\n\nDeseja salvar as diferenças ?", onlyA.Distinct().Count()), 
                 "Confirmação", 

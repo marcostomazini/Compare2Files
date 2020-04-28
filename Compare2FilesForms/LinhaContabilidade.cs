@@ -16,11 +16,35 @@ namespace Compare2FilesForms
         public string Sinistro => Linha.Substring(467, 10);
         public string DataSinistro => Linha.Substring(477, 10);
         public string ValorSinistro => Linha.Substring(519, 12);
-        public string TipoMovimentacao => Linha.Substring(802, 2);
+        public string TipoSinistro => Linha.Substring(805, 2);
         public string ParTip => Linha.Substring(60, 1);
-        public string CodigoExterno => Linha.Substring(352, 7);
+        public string CodigoExterno => Linha.Substring(795, 10);
 
-        public IList<Valor> ExtrairValores()
+        public string DescricaoTipoSinitro
+        {
+            get
+            {
+                switch (TipoSinistro)
+                {
+                    case "02":
+                        return "CO-PAR ou Avulsa";
+                    case "03":
+                        return "Recurso Glosa (Própria 250)";
+                    case "04":
+                        return "Recurso Glosa (Próxima 260)";
+                    case "05":
+                        return "Movimento de acerto";
+                    case "01":
+                        return "Glosa 790";
+                    case "00":
+                        return "Sinistro/Prêmio";
+                    default:
+                        return "";
+                }
+            }
+        }
+
+    public IList<Valor> ExtrairValores()
         {
             var listaValores = new List<Valor>();
 
@@ -34,7 +58,7 @@ namespace Compare2FilesForms
                 {
                     Coluna = coluna,
                     Inicial = inicial,
-                    Texto = Linha.Substring(inicial, coluna.Tamanho)
+                    Texto = Linha.Substring(inicial, coluna.Tamanho),
                 };
 
                 listaValores.Add(valor);
@@ -59,7 +83,7 @@ namespace Compare2FilesForms
         {
             return string.Equals(Endosso, other.Endosso) 
                 && string.Equals(Fatura, other.Fatura) 
-                && string.Equals(TipoMovimentacao, other.TipoMovimentacao) 
+                && string.Equals(TipoSinistro, other.TipoSinistro) 
                 && string.Equals(ValorPremio, other.ValorPremio) 
                 && string.Equals(Documento, other.Documento)
                 && string.Equals(Sinistro, other.Sinistro)
@@ -75,7 +99,7 @@ namespace Compare2FilesForms
             {
                 var hashCode = Endosso != null ? Endosso.GetHashCode() : 0;
                 hashCode = (hashCode * 397) ^ (Fatura != null ? Fatura.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (TipoMovimentacao != null ? TipoMovimentacao.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (TipoSinistro != null ? TipoSinistro.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (ValorPremio != null ? ValorPremio.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Documento != null ? Documento.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (ValorSinistro != null ? ValorSinistro.GetHashCode() : 0);

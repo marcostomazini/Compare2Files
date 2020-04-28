@@ -12,8 +12,10 @@ namespace CompareFolder
         private string DiretorioInicialNovo => diretorioInicial + "NOVO\\";
         private string DiretorioInicialAtual => diretorioInicial + "ATUAL\\";
         private readonly IList<string> listaNaoEncontradoArquivoAtual;
+        private readonly IList<string> listaNaoEncontradoArquivoNovo;
         private readonly IList<string> listaArquivoIdentico;
-        private readonly IList<string> listaArquivoDiferente;
+        private readonly IList<string> listaLinhaDiferente;
+        private readonly IList<string> listaLinhaDiferencaIgnorada;
 
         public ComparadorDiretorio(string diretorioInicial)
         {
@@ -23,8 +25,10 @@ namespace CompareFolder
                 this.diretorioInicial += "\\";
 
             listaNaoEncontradoArquivoAtual = new List<string>();
+            listaNaoEncontradoArquivoNovo = new List<string>();
             listaArquivoIdentico = new List<string>();
-            listaArquivoDiferente = new List<string>();
+            listaLinhaDiferente = new List<string>();
+            listaLinhaDiferencaIgnorada = new List<string>();
         }
 
         public void Comparar()
@@ -70,26 +74,51 @@ namespace CompareFolder
                     }
                     else
                     {
-                        var comparadorLinhas = new ComparadorLinhasComLayout(linhasQueExistemApenasNoArquivoNovo, linhasQueExistemApenasNoArquivoAtual);
-                        var listaAnaliseDiferenca = comparadorLinhas.Analisar();
+                        var comparadorLinhas = new ComparadorLinhasComLayout(linhasQueExistemApenasNoArquivoAtual, linhasQueExistemApenasNoArquivoNovo);
 
-                        listaArquivoDiferente.Add(arquivoNovo + " => " + arquivoAtual);
-                        
-                        foreach (var analiseDiferenca in listaAnaliseDiferenca)
-                            listaArquivoDiferente.Add(analiseDiferenca);
+                        var listaAnaliseDiferenca = comparadorLinhas.Analisar(out var listaAnaliseIgnorada);
+
+                        if (listaAnaliseDiferenca.Any())
+                        {
+                            listaLinhaDiferente.Add(arquivoNovo + " => " + arquivoAtual);
+
+                            foreach (var analiseDiferenca in listaAnaliseDiferenca)
+                                listaLinhaDiferente.Add(analiseDiferenca);
+                        }
+
+                        if (listaAnaliseIgnorada.Any())
+                        {
+                            listaLinhaDiferencaIgnorada.Add(arquivoNovo + " => " + arquivoAtual);
+
+                            foreach (var analiseDiferencaIgnorada in listaAnaliseIgnorada)
+                                listaLinhaDiferencaIgnorada.Add(analiseDiferencaIgnorada);
+                        }
                     }
                 }
             }
 
+            foreach (var arquivoAtual in arquivosAtuais)
+            {
+                var nomeArquivo = arquivoAtual.Replace(DiretorioInicialAtual, string.Empty);
+
+                var arquivoNovo = arquivosNovos.FirstOrDefault(x => x.EndsWith(nomeArquivo));
+
+                if (string.IsNullOrEmpty(arquivoNovo))
+                {
+                    listaNaoEncontradoArquivoNovo.Add(nomeArquivo);
+                }
+            }
+
             Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Identico.txt", listaArquivoIdentico);
-            Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Diferente.txt", listaArquivoDiferente);
-            Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Arquivo_Nao_Encontrado.txt", listaNaoEncontradoArquivoAtual);
+            Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Diferente.txt", listaLinhaDiferente);
+            Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Ignorado.txt", listaLinhaDiferencaIgnorada);
+            Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Arquivo_Novo_Nao_Encontrado.txt", listaNaoEncontradoArquivoAtual);
+            Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Arquivo_Atual_Nao_Encontrado.txt", listaNaoEncontradoArquivoNovo);
         }
 
         private void Gravar(string nomeArquivoGravacao, IList<string> linhas)
         {
-            if (linhas.Any())
-                File.WriteAllLines(Path.Combine(diretorioInicial, nomeArquivoGravacao), linhas);
+            File.WriteAllLines(Path.Combine(diretorioInicial, nomeArquivoGravacao), linhas);
         }
     }
 }
