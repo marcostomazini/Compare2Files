@@ -37,8 +37,8 @@ namespace Compare2FilesForms
 
             foreach (var linhaNova in _linhasNovas)
             {
-                retorno.Add(string.Format("Fatura: {0}, Sinistro: {1}, Dt. Sinistro: {2}, Vlr Sinistro: {3}, Vlr Prêmio: {4}", linhaNova.Fatura, linhaNova.Sinistro, linhaNova.DataSinistro, linhaNova.ValorSinistro, linhaNova.ValorPremio));
-                retorno.Add(string.Format("{0}", linhaNova.Linha));
+                retorno.Add($"Fatura: {linhaNova.Fatura}, Endosso: {linhaNova.Endosso}, Dt. Sinistro: {linhaNova.DataSinistro}, Vlr Sinistro: {linhaNova.ValorSinistro}, Vlr Prêmio: {linhaNova.ValorPremio}");
+                retorno.Add($"{linhaNova.Linha}");
                 
                 var linhasAntigasSemelhantes = _linhasAntigas.Where(x => Equals(x, linhaNova)).ToList();
 

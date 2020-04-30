@@ -5,6 +5,7 @@ namespace Compare2FilesForms
     public class Coluna
     {
         public double ValorDiferencaMinima { get; }
+        public string TextoPadraoPermitido { get; set; }
         public string Nome { get; }
         public int Tamanho { get; }
 
@@ -17,6 +18,13 @@ namespace Compare2FilesForms
         public Coluna(string nome, int tamanho, double valorDiferencaMinima)
         {
             ValorDiferencaMinima = valorDiferencaMinima;
+            Nome = nome;
+            Tamanho = tamanho;
+        }
+
+        public Coluna(string nome, int tamanho, string textoPadraoPermitido)
+        {
+            TextoPadraoPermitido = textoPadraoPermitido;
             Nome = nome;
             Tamanho = tamanho;
         }
@@ -50,7 +58,7 @@ namespace Compare2FilesForms
             new Coluna("ZEROS_3", 2),
             new Coluna("ZEROS_3", 1),
             new Coluna("CodigoConvenio", 2),
-            new Coluna("RegimePagamento", 23),
+            new Coluna("RegimePagamento", 23, "00000000000000000000000"),
             new Coluna("Natureza", 1),
             new Coluna("CNPJCPF", 18),
             new Coluna("DataContabilSinistro", 10),
@@ -64,7 +72,7 @@ namespace Compare2FilesForms
             new Coluna("ZEROS_5", 1),
             new Coluna("AnoDataRecebimento", 4),
             new Coluna("p_Endosso(numero guia)", 10),
-            new Coluna("DataAtendimento", 10),
+            new Coluna("DataAtendimento", 10, "00/00/0000"),
             new Coluna("DataRecebimento", 10),
             new Coluna("DataLancamento", 10),
             new Coluna("CodigoDif", 7),
@@ -78,7 +86,7 @@ namespace Compare2FilesForms
             new Coluna("Nome", 50),
             new Coluna("DataContabilSinistro", 10),
             new Coluna("sauliq", 6),
-            new Coluna("RegimePagamento", 10),
+            new Coluna("RegimePagamento", 10, "0000000000"),
             new Coluna("Corresponsabilidade", 2),
             new Coluna("FIXO_2", 1),
             new Coluna("DataArquivo", 10),

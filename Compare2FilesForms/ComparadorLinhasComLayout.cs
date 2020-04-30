@@ -26,19 +26,29 @@ namespace Compare2FilesForms
             {
                 var linhasAntigasComMesmaFaturaSinistro = linhasAntigas
                     .Where(x => x.Fatura == linhaNova.Fatura)
-                    .Where(x => x.Sinistro == linhaNova.Sinistro)
+                    .Where(x => x.Endosso == linhaNova.Endosso)
                     .Where(x => x.ParTip == linhaNova.ParTip)
                     .Where(x => x.CodigoExterno == linhaNova.CodigoExterno)
+                    .Where(x => x.ContaCorporativo == linhaNova.ContaCorporativo)
                     .ToList();
 
+                bool SeletorPorValor(LinhaContabilidade x) => x.ValorPremio == linhaNova.ValorPremio && x.ValorSinistro == linhaNova.ValorSinistro;
+                
+                //Caso exista mais de 1 linha semelhante.... pega a linha com mesmo valor
+                if (linhasAntigasComMesmaFaturaSinistro.Count > 1 && linhasAntigasComMesmaFaturaSinistro.Any(SeletorPorValor))
+                    linhasAntigasComMesmaFaturaSinistro = linhasAntigasComMesmaFaturaSinistro.Where(SeletorPorValor).ToList();
+                
                 if (linhasAntigasComMesmaFaturaSinistro.Any())
                 {
                     var valoresNovos = linhaNova.ExtrairValores();
                     
                     foreach (var linhaAntigasComMesmaFatura in linhasAntigasComMesmaFaturaSinistro)
                     {
+                        var listaDiferencaDaLinhas = new List<string>();
+                        var listaDiferencaIgnoradaDaLinhas = new List<string>();
+                        
                         var valoresAntigos = linhaAntigasComMesmaFatura.ExtrairValores();
-
+                        
                         foreach (var valorAntigo in valoresAntigos)
                         {
                             var valorNovo = valoresNovos
@@ -47,16 +57,26 @@ namespace Compare2FilesForms
 
                             var textoDiferenca = $"Coluna: {valorNovo.Coluna.Nome} - Inicial: {valorNovo.Inicial + 1} - Tamanho: {valorNovo.Coluna.Tamanho} - ANTES: '{valorAntigo.Texto}' - NOVO: '{valorNovo.Texto}'";
 
-                            if (valorNovo.DeveIgnoradarDiferenca(valorAntigo))
+                            if (valorNovo.Texto != valorAntigo.Texto)
                             {
-                                listaDiferencaIgnorada.Add(linhaAntigasComMesmaFatura.Linha);
-                                listaDiferencaIgnorada.Add(textoDiferenca);
+                                if (valorNovo.DeveIgnoradarDiferenca(valorAntigo.Texto))
+                                    listaDiferencaIgnoradaDaLinhas.Add(textoDiferenca);
+                                else
+                                    listaDiferencaDaLinhas.Add(textoDiferenca);
                             }
-                            else if (valorNovo.Texto != valorAntigo.Texto)
-                            {
-                                listaComDiferenca.Add(linhaAntigasComMesmaFatura.Linha);
-                                listaComDiferenca.Add(textoDiferenca);
-                            }
+                        }
+
+
+                        if (listaDiferencaIgnoradaDaLinhas.Any())
+                        {
+                            listaDiferencaIgnorada.Add(linhaAntigasComMesmaFatura.Linha);
+                            listaDiferencaIgnorada.AddRange(listaDiferencaIgnoradaDaLinhas);
+                        }
+                        
+                        if (listaDiferencaDaLinhas.Any())
+                        {
+                            listaComDiferenca.Add(linhaAntigasComMesmaFatura.Linha);
+                            listaComDiferenca.AddRange(listaDiferencaDaLinhas);
                         }
                     }
                 }
@@ -65,7 +85,10 @@ namespace Compare2FilesForms
                     listaComDiferenca.Add("- Não encontrada linha no arquivo, com mesma fatura, sinitro, parTip, codigo externo");
                 }
 
-                var textoLinha = $"- Fatura: {linhaNova.Fatura}, Sinistro: {linhaNova.Sinistro}, Dt. Sinistro: {linhaNova.DataSinistro}, Vlr Sinistro: {linhaNova.ValorSinistro}, Vlr Prêmio: {linhaNova.ValorPremio}, ParTip: {linhaNova.ParTip}, Codigo Externo: {linhaNova.CodigoExterno}, Tipo Sinistro: {linhaNova.DescricaoTipoSinitro}";
+                var textoLinha = $"- Fatura: {linhaNova.Fatura}, Endosso: {linhaNova.Endosso}, Dt. Sinistro: {linhaNova.DataSinistro}, " +
+                                 $"Vlr Sinistro: {linhaNova.ValorSinistro}, Vlr Prêmio: {linhaNova.ValorPremio}, ParTip: {linhaNova.ParTip}, " +
+                                 $"Codigo Externo: {linhaNova.CodigoExterno}, Tipo Sinistro: {linhaNova.DescricaoTipoSinitro}, " +
+                                 $"Conta Corporativo: {linhaNova.ContaCorporativo}";
 
                 if (listaComDiferenca.Any())
                 {

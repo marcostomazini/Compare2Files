@@ -36,8 +36,12 @@ namespace CompareFolder
             var arquivosNovos = Directory.GetFiles(DiretorioInicialNovo, "*.*", SearchOption.AllDirectories);
             var arquivosAtuais = Directory.GetFiles(DiretorioInicialAtual, "*.*", SearchOption.AllDirectories);
 
-            foreach (var arquivoNovo in arquivosNovos)
+            for (var i = 0; i < arquivosNovos.Length; i++)
             {
+                var arquivoNovo = arquivosNovos[i];
+
+                Console.WriteLine($"{i + 1} de {arquivosNovos.Length} - {arquivoNovo}");
+                
                 var nomeArquivo = arquivoNovo.Replace(DiretorioInicialNovo, string.Empty);
 
                 var arquivoAtual = arquivosAtuais.FirstOrDefault(x => x.EndsWith(nomeArquivo));
@@ -71,27 +75,51 @@ namespace CompareFolder
                     if (!linhasDiferentes.Any())
                     {
                         listaArquivoIdentico.Add(arquivoNovo + " => " + arquivoAtual);
+                        
+                        File.Move(arquivoNovo, arquivoNovo.Replace("\\NOVO\\", "\\NOVO_ok\\"));
+                        File.Move(arquivoAtual, arquivoAtual.Replace("\\ATUAL\\", "\\ATUAL_ok\\"));
                     }
                     else
                     {
-                        var comparadorLinhas = new ComparadorLinhasComLayout(linhasQueExistemApenasNoArquivoAtual, linhasQueExistemApenasNoArquivoNovo);
-
-                        var listaAnaliseDiferenca = comparadorLinhas.Analisar(out var listaAnaliseIgnorada);
-
-                        if (listaAnaliseDiferenca.Any())
+                        if (linhasQueExistemApenasNoArquivoNovo.Count > 200)
                         {
                             listaLinhaDiferente.Add(arquivoNovo + " => " + arquivoAtual);
-
-                            foreach (var analiseDiferenca in listaAnaliseDiferenca)
-                                listaLinhaDiferente.Add(analiseDiferenca);
+                            listaLinhaDiferente.Add("   Diferença acima de 200 registros (Conferir o tamanho do arquivo)");
+                            listaLinhaDiferente.Add($"      {linhasQueExistemApenasNoArquivoNovo.Count} linhas que existem apenas no novo");
+                            listaLinhaDiferente.Add($"      {linhasQueExistemApenasNoArquivoAtual.Count} linhas que existem apenas no atual");
                         }
-
-                        if (listaAnaliseIgnorada.Any())
+                        else
                         {
-                            listaLinhaDiferencaIgnorada.Add(arquivoNovo + " => " + arquivoAtual);
+                            var comparadorLinhas = new ComparadorLinhasComLayout(linhasQueExistemApenasNoArquivoAtual,
+                                linhasQueExistemApenasNoArquivoNovo);
 
-                            foreach (var analiseDiferencaIgnorada in listaAnaliseIgnorada)
-                                listaLinhaDiferencaIgnorada.Add(analiseDiferencaIgnorada);
+                            var listaAnaliseDiferenca = comparadorLinhas.Analisar(out var listaAnaliseIgnorada);
+
+                            if (listaAnaliseDiferenca.Any())
+                            {
+                                listaLinhaDiferente.Add(arquivoNovo + " => " + arquivoAtual);
+
+                                foreach (var analiseDiferenca in listaAnaliseDiferenca)
+                                    listaLinhaDiferente.Add(analiseDiferenca);
+                            }
+
+                            if (listaAnaliseIgnorada.Any())
+                            {
+                                listaLinhaDiferencaIgnorada.Add(arquivoNovo + " => " + arquivoAtual);
+
+                                foreach (var analiseDiferencaIgnorada in listaAnaliseIgnorada)
+                                    listaLinhaDiferencaIgnorada.Add(analiseDiferencaIgnorada);
+
+                                //Só existe diferença ignorada
+                                if (listaAnaliseDiferenca.Count == 0)
+                                {
+                                    listaArquivoIdentico.Add(arquivoNovo + " => " + arquivoAtual);
+                                    listaArquivoIdentico.Add("   Existem diferenças mas todas foram ignoradas");
+
+                                    File.Move(arquivoNovo, arquivoNovo.Replace("\\NOVO\\", "\\NOVO_ok\\"));
+                                    File.Move(arquivoAtual, arquivoAtual.Replace("\\ATUAL\\", "\\ATUAL_ok\\"));
+                                }
+                            }
                         }
                     }
                 }
@@ -112,8 +140,8 @@ namespace CompareFolder
             Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Identico.txt", listaArquivoIdentico);
             Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Diferente.txt", listaLinhaDiferente);
             Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Ignorado.txt", listaLinhaDiferencaIgnorada);
-            Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Arquivo_Novo_Nao_Encontrado.txt", listaNaoEncontradoArquivoAtual);
-            Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Arquivo_Atual_Nao_Encontrado.txt", listaNaoEncontradoArquivoNovo);
+            Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Arquivo_Novo_Sem_ATUAL.txt", listaNaoEncontradoArquivoAtual);
+            Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Arquivo_Atual_Sem_NOVO.txt", listaNaoEncontradoArquivoNovo);
         }
 
         private void Gravar(string nomeArquivoGravacao, IList<string> linhas)
