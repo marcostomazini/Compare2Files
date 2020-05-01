@@ -75,9 +75,7 @@ namespace CompareFolder
                     if (!linhasDiferentes.Any())
                     {
                         listaArquivoIdentico.Add(arquivoNovo + " => " + arquivoAtual);
-                        
-                        File.Move(arquivoNovo, arquivoNovo.Replace("\\NOVO\\", "\\NOVO_ok\\"));
-                        File.Move(arquivoAtual, arquivoAtual.Replace("\\ATUAL\\", "\\ATUAL_ok\\"));
+                        MoverArquivosParaOk(arquivoNovo, arquivoAtual);
                     }
                     else
                     {
@@ -115,9 +113,7 @@ namespace CompareFolder
                                 {
                                     listaArquivoIdentico.Add(arquivoNovo + " => " + arquivoAtual);
                                     listaArquivoIdentico.Add("   Existem diferenças mas todas foram ignoradas");
-
-                                    File.Move(arquivoNovo, arquivoNovo.Replace("\\NOVO\\", "\\NOVO_ok\\"));
-                                    File.Move(arquivoAtual, arquivoAtual.Replace("\\ATUAL\\", "\\ATUAL_ok\\"));
+                                    MoverArquivosParaOk(arquivoNovo, arquivoAtual);
                                 }
                             }
                         }
@@ -144,7 +140,24 @@ namespace CompareFolder
             Gravar($"Comparacao{DateTime.Today:yyyyMMdd}_Arquivo_Atual_Sem_NOVO.txt", listaNaoEncontradoArquivoNovo);
         }
 
-        private void Gravar(string nomeArquivoGravacao, IList<string> linhas)
+        private static void MoverArquivosParaOk(params string[] arquivos)
+        {
+            foreach (var arquivo in arquivos)
+            {
+                var destino = arquivo.Contains("\\NOVO\\")
+                    ? arquivo.Replace("\\NOVO\\", "\\NOVO_ok\\")
+                    : arquivo.Replace("\\ATUAL\\", "\\ATUAL_ok\\");
+
+                var caminho = Path.GetDirectoryName(destino);
+
+                if (string.IsNullOrEmpty(caminho) == false && Directory.Exists(caminho) == false)
+                    Directory.CreateDirectory(caminho);
+
+                File.Move(arquivo, destino);
+            }
+        }
+
+        private void Gravar(string nomeArquivoGravacao, IEnumerable<string> linhas)
         {
             File.WriteAllLines(Path.Combine(diretorioInicial, nomeArquivoGravacao), linhas);
         }
