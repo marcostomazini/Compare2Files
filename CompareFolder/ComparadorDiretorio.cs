@@ -129,7 +129,7 @@ namespace CompareFolder
 
                 if (string.IsNullOrEmpty(arquivoNovo))
                 {
-                    listaNaoEncontradoArquivoNovo.Add(nomeArquivo);
+                    listaNaoEncontradoArquivoNovo.Add(arquivoAtual);
                 }
             }
 
@@ -153,6 +153,9 @@ namespace CompareFolder
                 if (string.IsNullOrEmpty(caminho) == false && Directory.Exists(caminho) == false)
                     Directory.CreateDirectory(caminho);
 
+                if (File.Exists(destino))
+                    File.Delete(destino);
+                
                 File.Move(arquivo, destino);
             }
         }
