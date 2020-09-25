@@ -22,6 +22,14 @@ namespace Compare2FilesForms
             Tamanho = tamanho;
         }
 
+        public Coluna(string nome, int tamanho, double valorDiferencaMinima, string textoPadraoPermitido)
+        {
+            TextoPadraoPermitido = textoPadraoPermitido;
+            ValorDiferencaMinima = valorDiferencaMinima;
+            Nome = nome;
+            Tamanho = tamanho;
+        }
+
         public Coluna(string nome, int tamanho, string textoPadraoPermitido)
         {
             TextoPadraoPermitido = textoPadraoPermitido;
@@ -71,17 +79,17 @@ namespace Compare2FilesForms
             new Coluna("FisicaJuridica", 1),
             new Coluna("ZEROS_5", 1),
             new Coluna("AnoDataRecebimento", 4),
-            new Coluna("p_Endosso(numero guia)", 10),
+            new Coluna("p_Endosso(numero guia)", 10, "0000000000"),
             new Coluna("DataAtendimento", 10, "00/00/0000"),
             new Coluna("DataRecebimento", 10),
             new Coluna("DataLancamento", 10),
             new Coluna("CodigoDif", 7),
             new Coluna("FilCodigoExterno", 5),
-            new Coluna("ValorGlosado(+ regra)", 15, 0.02d),
+            new Coluna("ValorGlosado(+ regra)", 15, 0.02d, "-00000000.00000"),
             new Coluna("ZEROS_5", 15),
             new Coluna("Hierarquia", 6),
             new Coluna("AnoDataVencimento", 4),
-            new Coluna("Endosso", 6),
+            new Coluna("Endosso", 6, "000000"),
             new Coluna("00050", 5),
             new Coluna("Nome", 50),
             new Coluna("DataContabilSinistro", 10),

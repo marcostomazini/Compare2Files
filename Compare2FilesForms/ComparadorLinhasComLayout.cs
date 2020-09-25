@@ -18,12 +18,12 @@ namespace Compare2FilesForms
         {
             resultadoListaDiferencaIgnorada = new List<string>();
             var resultadoListaComDiferenca = new List<string>();
-
-            var listaDiferencaIgnorada = new List<string>();
-            var listaComDiferenca = new List<string>();
             
             foreach (var linhaNova in linhasNovas)
             {
+                var listaDiferencaIgnorada = new List<string>();
+                var listaComDiferenca = new List<string>();
+
                 var linhasAntigasComMesmaFaturaSinistro = linhasAntigas
                     .Where(x => x.Fatura == linhaNova.Fatura)
                     .Where(x => x.Endosso == linhaNova.Endosso)

@@ -88,8 +88,7 @@ namespace CompareFolder
                         }
                         else
                         {
-                            var comparadorLinhas = new ComparadorLinhasComLayout(linhasQueExistemApenasNoArquivoAtual,
-                                linhasQueExistemApenasNoArquivoNovo);
+                            var comparadorLinhas = new ComparadorLinhasComLayout(linhasQueExistemApenasNoArquivoAtual, linhasQueExistemApenasNoArquivoNovo);
 
                             var listaAnaliseDiferenca = comparadorLinhas.Analisar(out var listaAnaliseIgnorada);
 
